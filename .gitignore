@@ -1,0 +1,14 @@
+build/
+out/
+.vs/
+*.user
+.tools/
+# Third-party firmware (SeaBIOS etc.) is supplied by the user, not committed.
+firmware/
+images/
+
+# .NET build output (gui/)
+bin/
+obj/
+# Packaged release (tools/package.ps1)
+dist/

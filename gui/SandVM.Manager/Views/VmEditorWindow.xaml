@@ -1,0 +1,144 @@
+<Window x:Class="SandVM.Manager.Views.VmEditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Yeni sanal makine" Width="620" Height="760" MinHeight="500"
+        WindowStartupLocation="CenterOwner" ResizeMode="CanResizeWithGrip" ShowInTaskbar="False">
+  <DockPanel>
+    <!-- Buttons -->
+    <Border DockPanel.Dock="Bottom" Background="{StaticResource SidebarBrush}" BorderBrush="{StaticResource BorderBrush}"
+            BorderThickness="0,1,0,0" Padding="20,12">
+      <DockPanel>
+        <TextBlock x:Name="ErrorText" Foreground="{StaticResource DangerBrush}" TextWrapping="Wrap" VerticalAlignment="Center"
+                   MaxWidth="330"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+          <Button Content="İptal" IsCancel="True" Margin="0,0,8,0" MinWidth="90"/>
+          <Button x:Name="OkButton" Style="{StaticResource PrimaryButton}" Content="Oluştur" IsDefault="True" MinWidth="110" Click="OnOk"/>
+        </StackPanel>
+      </DockPanel>
+    </Border>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+      <StackPanel Margin="20,8,20,20">
+
+        <!-- Name and OS -->
+        <Border Style="{StaticResource Card}" Margin="0,12,0,0">
+          <StackPanel>
+            <TextBlock Style="{StaticResource CardTitle}" Text="Ad ve işletim sistemi"/>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="170"/>
+              </Grid.ColumnDefinitions>
+              <StackPanel>
+                <TextBlock Text="Ad" Margin="0,0,0,6" FontWeight="SemiBold"/>
+                <TextBox x:Name="NameBox"/>
+              </StackPanel>
+              <StackPanel Grid.Column="2">
+                <TextBlock Text="Tür" Margin="0,0,0,6" FontWeight="SemiBold"/>
+                <ComboBox x:Name="OsBox" SelectionChanged="OnOsChanged">
+                  <ComboBoxItem Content="Linux" Tag="Linux"/>
+                  <ComboBoxItem Content="Windows" Tag="Windows"/>
+                  <ComboBoxItem Content="ReactOS" Tag="ReactOS"/>
+                  <ComboBoxItem Content="Diğer" Tag="Other"/>
+                </ComboBox>
+              </StackPanel>
+            </Grid>
+          </StackPanel>
+        </Border>
+
+        <!-- Install media -->
+        <Border Style="{StaticResource Card}" Margin="0,12,0,0">
+          <StackPanel>
+            <TextBlock Style="{StaticResource CardTitle}" Text="Kurulum ortamı (CD/DVD)"/>
+            <DockPanel>
+              <Button DockPanel.Dock="Right" Content="Çıkar" Margin="8,0,0,0" Click="OnClearIso"/>
+              <Button DockPanel.Dock="Right" Content="Gözat..." Margin="8,0,0,0" Click="OnBrowseIso"/>
+              <TextBox x:Name="IsoBox" TextChanged="OnIsoChanged"/>
+            </DockPanel>
+            <TextBlock Style="{StaticResource Hint}"
+                       Text="Bir .iso dosyası seçin (örneğin Ubuntu, Lubuntu, ReactOS). Kurulumdan sonra burayı boşaltabilirsiniz; makine önce sabit diskten açılmayı dener."/>
+          </StackPanel>
+        </Border>
+
+        <!-- Memory and CPU -->
+        <Border Style="{StaticResource Card}" Margin="0,12,0,0">
+          <StackPanel>
+            <TextBlock Style="{StaticResource CardTitle}" Text="Bellek ve işlemci"/>
+            <DockPanel>
+              <TextBlock DockPanel.Dock="Right" x:Name="RamText" Width="80" TextAlignment="Right" FontWeight="SemiBold"/>
+              <TextBlock Text="Bellek" Width="70" VerticalAlignment="Center"/>
+              <Slider x:Name="RamSlider" Minimum="256" TickFrequency="256" IsSnapToTickEnabled="True"
+                      SmallChange="256" LargeChange="1024" VerticalAlignment="Center" ValueChanged="OnRamChanged"/>
+            </DockPanel>
+            <TextBlock x:Name="RamHint" Style="{StaticResource Hint}"/>
+            <DockPanel Margin="0,14,0,0">
+              <TextBlock DockPanel.Dock="Right" x:Name="CpuText" Width="80" TextAlignment="Right" FontWeight="SemiBold"/>
+              <TextBlock Text="İşlemci" Width="70" VerticalAlignment="Center"/>
+              <Slider x:Name="CpuSlider" Minimum="1" TickFrequency="1" IsSnapToTickEnabled="True" VerticalAlignment="Center"
+                      ValueChanged="OnCpuChanged"/>
+            </DockPanel>
+          </StackPanel>
+        </Border>
+
+        <!-- Disk -->
+        <Border Style="{StaticResource Card}" Margin="0,12,0,0">
+          <StackPanel>
+            <TextBlock Style="{StaticResource CardTitle}" Text="Sabit disk"/>
+            <RadioButton x:Name="NewDiskRadio" Content="Yeni bir sanal disk oluştur" GroupName="disk" Checked="OnDiskModeChanged"/>
+            <StackPanel x:Name="NewDiskPanel" Margin="24,4,0,8">
+              <DockPanel>
+                <TextBlock DockPanel.Dock="Right" x:Name="DiskSizeText" Width="80" TextAlignment="Right" FontWeight="SemiBold"/>
+                <TextBlock Text="Boyut" Width="46" VerticalAlignment="Center"/>
+                <Slider x:Name="DiskSizeSlider" Minimum="2" Maximum="512" TickFrequency="1" IsSnapToTickEnabled="True"
+                        LargeChange="10" VerticalAlignment="Center" ValueChanged="OnDiskSizeChanged"/>
+              </DockPanel>
+              <TextBlock x:Name="NewDiskPathText" Style="{StaticResource Hint}"/>
+              <TextBlock Style="{StaticResource Hint}" Text="Disk dosyası dinamik büyür: yalnızca misafirin yazdığı kadar yer kaplar."/>
+            </StackPanel>
+            <RadioButton x:Name="ExistingDiskRadio" Content="Var olan bir disk dosyasını kullan (.img)" GroupName="disk"
+                         Checked="OnDiskModeChanged"/>
+            <DockPanel x:Name="ExistingDiskPanel" Margin="24,4,0,8">
+              <Button DockPanel.Dock="Right" Content="Gözat..." Margin="8,0,0,0" Click="OnBrowseDisk"/>
+              <TextBox x:Name="DiskBox"/>
+            </DockPanel>
+            <RadioButton x:Name="NoDiskRadio" Content="Disk kullanma (yalnızca canlı CD)" GroupName="disk" Checked="OnDiskModeChanged"/>
+          </StackPanel>
+        </Border>
+
+        <!-- Network and display -->
+        <Border Style="{StaticResource Card}" Margin="0,12,0,0">
+          <StackPanel>
+            <TextBlock Style="{StaticResource CardTitle}" Text="Ağ ve ekran"/>
+            <CheckBox x:Name="NetworkCheck" Content="İnternet bağlantısı (NAT)" Checked="OnNetworkChanged" Unchecked="OnNetworkChanged"/>
+            <StackPanel x:Name="ForwardPanel" Margin="24,4,0,6">
+              <TextBlock Text="Port yönlendirme (isteğe bağlı)" Margin="0,0,0,4"/>
+              <TextBox x:Name="ForwardBox"/>
+              <TextBlock Style="{StaticResource Hint}"
+                         Text="ana_port:misafir_port, virgülle ayrılmış. Örnek: 2222:22 ile 'ssh -p 2222 kullanıcı@127.0.0.1' misafire bağlanır."/>
+            </StackPanel>
+            <CheckBox x:Name="DisplayCheck" Content="Ekranı pencerede göster (klavye ve fare)"/>
+            <TextBlock Style="{StaticResource Hint}" Margin="24,0,0,0"
+                       Text="Kapalıysa makine yalnızca seri konsoldan (Konsol sekmesi) kullanılır."/>
+          </StackPanel>
+        </Border>
+
+        <!-- Advanced -->
+        <Expander Header="Gelişmiş ayarlar" Margin="0,14,0,0" FontWeight="SemiBold">
+          <Border Style="{StaticResource Card}" Margin="0,8,0,0">
+            <StackPanel TextElement.FontWeight="Normal">
+              <CheckBox x:Name="ApicCheck" Content="APIC / IOAPIC kesme denetleyicisi"/>
+              <TextBlock Style="{StaticResource Hint}" Margin="24,0,0,6"
+                         Text="Modern sistemler için açık bırakın. Birden çok işlemcide her zaman açıktır."/>
+              <CheckBox x:Name="VerboseCheck" Content="Ayrıntılı günlük (hata ayıklama)"/>
+              <TextBlock Text="Sandboxie-Plus kutusu" Margin="0,12,0,4"/>
+              <TextBox x:Name="SandboxBox"/>
+              <TextBlock Style="{StaticResource Hint}"
+                         Text="Doluysa SandVM bu Sandboxie kutusunun içinde çalışır (ek yalıtım). Boş bırakmak normaldir."/>
+            </StackPanel>
+          </Border>
+        </Expander>
+      </StackPanel>
+    </ScrollViewer>
+  </DockPanel>
+</Window>
