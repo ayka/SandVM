@@ -1,7 +1,13 @@
 # Yeni oturum için devam noktası
 
 > Yeni bir Claude Code oturumu bu dosyayı okuyarak kaldığı yerden devam eder.
-> Son güncelleme: 2026-10-30 (v0.1.0 sürümü). Ayrıntılar `collab/HANDOFF.md`'nin en üstünde.
+> Son güncelleme: 2026-10-30 (v0.1.1-preview.1 GitHub ön sürümü). Ayrıntılar `collab/HANDOFF.md`'nin en üstünde.
+
+## 2026-10-30 oturumu 2: portable ön sürüm v0.1.1-preview.1 (tamamlandı)
+Kullanıcı "portable sürümü incele, hataları gider, GitHub'da ön sürüm olarak yayınla" dedi.
+Kararlar: depo `ayka/SandVM` (public), firmware pakette + SeaBIOS kaynak arşivi sürümde, etiket
+`v0.1.1-preview.1`. Portable mod: `portable.txt` -> GUI verisi paket içinde (`data\`, `machines\`).
+Paket: `.\tools\package.ps1` (varsayılan portable, ~65 MB). Ayrıntı: HANDOFF T-029.
 
 ## 2026-10-30 oturumu: v0.1.0 sürüm hazırlığı (tamamlandı)
 Kullanıcı "projeyi tamamla ve yayınlanabilir sürüm haline getir" dedi. Kapsam: v0.1.0 sürüm
@@ -39,7 +45,7 @@ Sıradaki adımlar (sırayla):
    kaldı, `images/archlinux-x86_64.iso.part` varsa silinebilir.
 5. T-025 GUI: snapshot yönetimi (VHD fark zinciri), yeni disk için VHD, açılış sırası, kontrol borusu komutları.
 > Kullanıcıyla Türkçe konuş. Kullanıcı komutları ayrı PowerShell'de çalıştırıyor; önce
-> `cd C:\Users\kayaa\Desktop\proje\sandboxie` gerekiyor.
+> proje klasörüne `cd` gerekiyor.
 
 ## Proje bir bakışta
 - **SandVM:** WHPX üzerine C++20 VMM. Hedef: Linux ve Windows 7 boot etmek. Sandboxie-Plus VMM sürecini

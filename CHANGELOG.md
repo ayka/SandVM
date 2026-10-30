@@ -2,6 +2,26 @@
 
 Bu proje [Anlamsal Sürümleme](https://semver.org/lang/tr/) kullanır.
 
+## [0.1.1-preview.1] - 2026-10-30
+
+Ön sürüm: portable paket düzeltmeleri.
+
+### Değişen
+
+- Sürüm paketi artık portable: SandVM.Manager .NET 8 çalışma zamanıyla birlikte (self-contained)
+  gelir, ayrı kurulum gerekmez.
+- SeaBIOS/SeaVGABIOS 1.17.0 pakete eklendi (LGPLv3); kaynak arşivi GitHub sürümünde.
+- `portable.txt` varken GUI ayarları `data\`, yeni makineleri `machines\` altında, paketin içinde
+  tutar; paket içindeki yollar göreli saklanır (USB bellekte sürücü harfi değişse de çalışır).
+
+### Düzeltilen
+
+- Paket firmware içermediği için GUI ilk açılışta "BIOS dosyası bulunamadı" diyordu.
+- Self-contained yayımlama başarısız olunca paket sessizce .NET kurulumu isteyen sürüme düşüyordu.
+- `VERSION.txt` commit edilmemiş değişikliklerle üretilen paketi `-dirty` olarak işaretler;
+  `sandvm --version` paket sürümüyle uyuşmazsa paketleme durur.
+- GUI yayımından `.pdb` dosyası çıkarıldı.
+
 ## [0.1.0] - 2026-10-30
 
 İlk herkese açık sürüm.

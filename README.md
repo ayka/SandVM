@@ -9,7 +9,7 @@ Sandboxie-Plus isteğe bağlı bir **dış izolasyon katmanıdır**; hipervizör
 seçeneği VMM sürecini bir Sandboxie kutusu içinde başlatır, ancak WHPX'in kutu içinden çalışması
 henüz doğrulanmamıştır (bkz. [Bilinen sınırlar](#bilinen-sınırlar)).
 
-## Durum (v0.1.0)
+## Durum (v0.1.1-preview.1)
 
 | Alan | Durum |
 |---|---|
@@ -31,13 +31,19 @@ henüz doğrulanmamıştır (bkz. [Bilinen sınırlar](#bilinen-sınırlar)).
 - Windows 10 veya 11, 64-bit
 - CPU sanallaştırması ve **Windows Hypervisor Platform** açık olmalı
   (Windows Özellikleri > Windows Hypervisor Platform; açtıktan sonra yeniden başlatın)
-- BIOS'tan boot için SeaBIOS ve SeaVGABIOS dosyaları (aşağıya bakın)
-- GUI için .NET 8 Desktop Runtime (paket framework-dependent ise)
+- Portable sürüm başka bir şey gerektirmez: GUI .NET çalışma zamanıyla, SeaBIOS/SeaVGABIOS
+  firmware ile birlikte gelir
 - Kaynaktan derlemek için llvm-mingw veya MSVC + CMake 3.20+
 
 ## Hızlı başlangıç
 
-Arşivi bir klasöre çıkarın ve komut isteminde şunları çalıştırın:
+`SandVM-<sürüm>-win64.zip` portable bir pakettir; kurulum gerekmez. Arşivi bir klasöre (veya USB
+belleğe) çıkarın. GUI için `SandVM.Manager\SandVM.Manager.exe` dosyasını açın. Paketteki
+`portable.txt` dosyası sayesinde ayarlar `data\`, yeni sanal makineler `machines\` klasörüne,
+yani paketin içine yazılır; paket içindeki yollar göreli saklanır, klasör taşınabilir. Bu dosyayı
+silerseniz kullanıcı başına konumlar (`%APPDATA%\SandVM`, `Belgeler\SandVM`) kullanılır.
+
+Komut satırından denemek için:
 
 ```bat
 sandvm.exe --version
@@ -58,8 +64,10 @@ firmware\bios-256k.bin        SeaBIOS
 firmware\vgabios-stdvga.bin   SeaVGABIOS
 ```
 
-Bu dosyalar lisans ve boyut nedeniyle depoya/pakete dahil edilmez. Bir QEMU kurulumundan
-kopyalayın. `sandvm selftest` ve `sandvm run --kernel` onlarsız da çalışır.
+Sürüm paketinde SeaBIOS 1.17.0 ikilileri (LGPLv3, değiştirilmemiş) bulunur; karşılık gelen
+kaynak kodu GitHub sürümüne `seabios-1.17.0.tar.gz` olarak eklenir. Depoya dahil değildir:
+kaynaktan derlerken bir QEMU kurulumundan `firmware\` klasörüne kopyalayın.
+`sandvm selftest` ve `sandvm run --kernel` onlarsız da çalışır.
 
 ## Kullanım örnekleri
 
@@ -144,12 +152,12 @@ dotnet build gui\SandVM.Manager\SandVM.Manager.csproj -c Release
 ## Sürüm paketi
 
 ```powershell
-.\tools\package.ps1
-.\tools\package.ps1 -IncludeFirmware   # SeaBIOS/SeaVGABIOS'u da ekler (yerel kullanım)
-.\tools\package.ps1 -SelfContained     # .NET 8 Desktop Runtime'ı GUI ile birlikte paketler
+.\tools\package.ps1                       # portable: .NET dahil GUI, firmware, portable.txt
+.\tools\package.ps1 -FrameworkDependent   # GUI için kurulu .NET 8 Desktop Runtime gerekir
+.\tools\package.ps1 -NoFirmware           # SeaBIOS/SeaVGABIOS pakete eklenmez
 ```
 
-Çıktı: `dist\SandVM-0.1.0-win64.zip` ve `dist\SHA256SUMS.txt`.
+Çıktı: `dist\SandVM-<sürüm>-win64.zip` ve `dist\SHA256SUMS.txt`.
 
 ## Proje yapısı
 
@@ -177,7 +185,7 @@ dotnet build gui\SandVM.Manager\SandVM.Manager.csproj -c Release
 - Sandboxie kutusu içinden WHPX kullanımı (T-009) doğrulanmadı.
 - USB tablet ve pencere kodunun bağımsız incelemesi ve Windows/ReactOS'ta elle testi tamamlanmadı.
 - GUI'de snapshot yönetimi ve açılış sırası düzenleme henüz yoktur.
-- Firmware ve ISO/disk imajları depoya ve varsayılan pakete dahil değildir.
+- ISO/disk imajları pakete dahil değildir; firmware depoda yoktur (yalnızca sürüm paketinde).
 
 ## Lisans
 

@@ -9,7 +9,7 @@
     <AssemblyName>SandVM.Manager</AssemblyName>
     <RootNamespace>SandVM.Manager</RootNamespace>
     <Product>SandVM Yöneticisi</Product>
-    <Version>0.1.0</Version>
+    <Version>0.1.1-preview.1</Version>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <SatelliteResourceLanguages>tr</SatelliteResourceLanguages>
   </PropertyGroup>

@@ -4,6 +4,32 @@ Newest entry on top. Format: date, author, task, what changed, what is untested,
 
 ---
 
+## 2026-10-30 · claude · T-029: portable ön sürüm v0.1.1-preview.1
+- **Portable paket incelemesi, bulunan hatalar:** (1) firmware pakette yoktu, GUI ilk açılışta "BIOS
+  bulunamadı" diyordu; (2) GUI ayarları `%APPDATA%`, makineleri `Belgeler` altına yazıyordu (portable
+  değil); (3) `-SelfContained` dışında paket .NET kurulumu istiyordu; (4) GUI `.pdb` pakete giriyordu;
+  (5) `VERSION.txt` commit edilmemiş değişikliklerle üretilen paketi temiz gösteriyordu; (6) `TASKS.md`
+  T-028 satırının başında PowerShell'den kalma `` `n `` vardı.
+- **Düzeltmeler:** `Store.cs` portable mod (`<paket>\portable.txt` varsa `data\` + `machines\`, paket
+  içindeki yollar göreli kaydedilir, yüklerken pakete göre çözülür). `package.ps1` varsayılanı portable:
+  self-contained GUI, firmware + `firmware\NOTICE.txt` (SeaBIOS 1.17.0, rel-1.17.0-0-gb52ca86e094d),
+  `portable.txt`, `-FrameworkDependent`/`-NoFirmware`, `version.h` ve `sandvm --version` denetimi,
+  `-dirty` işareti, `DebugType=none`. Sürüm 0.1.1-preview.1 (CMake 0.1.1). README, CHANGELOG,
+  THIRD_PARTY_NOTICES, docs/RELEASE.md güncellendi. LGPL için SeaBIOS kaynak arşivi
+  (`seabios-1.17.0.tar.gz`, sha256 5159a35f...7712) GitHub sürümüne eklendi.
+- **Test:** zip temiz klasöre açıldı: `--version`, `selftest --bios firmware\bios-256k.bin` PASS, paketteki
+  firmware ile Alpine ISO `localhost login:`'e kadar açıldı (`ctl status/stop`), GUI portable modda
+  "Hipervizör hazır", `%APPDATA%` listesini okumadı, `data\manager.json` oluştu; göreli disk yolu
+  yüklemede mutlak oldu, kaydederken göreli kaldı.
+- **Codex** `collab/out/20261030-103938-review-gui-SandVM-Manager-Services-Store-cs.md`: #2 düzeltildi
+  (kaydederken yollar önce mutlak yapılıyor). #1 reddedildi: `dist\<ad>` hazırlık klasörü yeniden
+  üretilebilen derleme çıktısı; zip ancak tüm adımlar bittikten sonra yeniden yazılıyor, yani
+  başarısız paketleme yayımlanmış bir şeyi bozmaz.
+- **Not tested:** .NET'siz temiz makinede GUI, GUI'den VM başlatma (CLI ile denendi).
+
+## 2026-10-30 · codex · T-028
+Fresh llvm-mingw Release build succeeded. Five selftests including bios-disk PASS. Self-contained win-x64 GUI publish succeeded; dist/SandVM-0.1.0-win64.zip regenerated with bundled .NET runtime. Packaging refuses framework-dependent fallback when SelfContained is requested; validates version and stage path before deletion. Firmware excluded. Windows 7, Sandboxie integration, clean-machine GUI interaction and independent review remain unverified. No commit or publication performed.
+
 ## 2026-10-30 · claude · T-027: v0.1.0 sürüm hazırlığı
 - **Derleme:** `CMakeLists.txt` 10 eksik kaynakla (`block/host_file,image,vhd,vmdk`, `devices/uhci,usb`,
   `pci/uhci_pci`, `cli/control_pipe,disk_cmd,keymap`) ve `comdlg32` ile güncellendi. `tools/build.ps1`

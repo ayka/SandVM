@@ -25,8 +25,9 @@ Bu proje `vMAJOR.MINOR.PATCH` biçiminde etiketlenir. v0.1.0 için hazırlanmı�
    ```powershell
    .\tools\package.ps1
    ```
-   Yerel kullanımda firmware eklemek için `-IncludeFirmware`, GUI'yi kendi kendine
-   yeterli yapmak için `-SelfContained` kullanın. Çıktı `dist\SandVM-<sürüm>-win64.zip`
+   Varsayılan paket portable'dır: GUI .NET çalışma zamanıyla birlikte, firmware dahil ve
+   `portable.txt` işaretli. `-FrameworkDependent` ve `-NoFirmware` bunları kapatır. Betik,
+   `src\core\version.h` ile `-Version` uyuşmazsa durur. Çıktı `dist\SandVM-<sürüm>-win64.zip`
    ve `dist\SHA256SUMS.txt` olur.
 5. **Git**
    ```powershell
@@ -36,5 +37,12 @@ Bu proje `vMAJOR.MINOR.PATCH` biçiminde etiketlenir. v0.1.0 için hazırlanmı�
    ```
    Push yalnızca kullanıcı istediğinde yapılır.
 6. **Paket içeriğini doğrula**: `sandvm.exe`, `SandVM.Manager\`, `docs\`,
-   `firmware\README.txt`, `README.md`, `LICENSE`, `CHANGELOG.md`,
+   `firmware\` (iki ikili + `NOTICE.txt`), `portable.txt`, `README.md`, `LICENSE`, `CHANGELOG.md`,
    `THIRD_PARTY_NOTICES.md`, `VERSION.txt`.
+7. **GitHub sürümü** (yalnızca kullanıcı isteyince)
+   ```powershell
+   git push origin main --tags
+   gh release create v<sürüm> dist\SandVM-<sürüm>-win64.zip dist\SHA256SUMS.txt `
+     <kaynak-klasörü>\seabios-1.17.0.tar.gz --prerelease --title "SandVM <sürüm>" --notes-file <notlar>
+   ```
+   Firmware pakette olduğu sürece SeaBIOS kaynak arşivi (LGPLv3) aynı sürüme eklenmelidir.

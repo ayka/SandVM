@@ -11,12 +11,15 @@ runtime. No Microsoft binaries are redistributed.
 
 ## SeaBIOS / SeaVGABIOS
 
-- Files: `bios-256k.bin`, `vgabios-stdvga.bin`
+- Files: `bios-256k.bin`, `vgabios-stdvga.bin` (SeaBIOS 1.17.0,
+  `rel-1.17.0-0-gb52ca86e094d`, unmodified QEMU prebuilt images)
 - License: GNU LGPL v3
 - Upstream: https://www.seabios.org/
-- Distribution: **not included** in this repository or in the default release
-  package. You supply these images yourself. If you redistribute a package that
-  contains them, keep the LGPL notice and provide the corresponding source code.
+- Distribution: not in this repository. The release package bundles them in
+  `firmware\` with a `NOTICE.txt`; the corresponding source code is attached to
+  the same GitHub release as `seabios-1.17.0.tar.gz` (also at
+  https://www.seabios.org/downloads/seabios-1.17.0.tar.gz). If you redistribute
+  the package, keep the notice and provide that source code.
 
 ## Sandboxie-Plus
 
@@ -36,11 +39,10 @@ runtime. No Microsoft binaries are redistributed.
 
 - License: MIT
 - Upstream: https://dotnet.microsoft.com/
-- Usage: the SandVM.Manager GUI targets `net8.0-windows`. The default package is
-  framework-dependent; the .NET 8 Desktop Runtime is a prerequisite. A
-  self-contained package can be produced with `tools/package.ps1 -SelfContained`;
-  in that case the Microsoft runtime files are redistributed under their own
-  license terms.
+- Usage: the SandVM.Manager GUI targets `net8.0-windows`. The default release
+  package is self-contained: the .NET 8 and WPF runtime files are redistributed
+  under their own license terms (MIT). `tools/package.ps1 -FrameworkDependent`
+  produces a package that needs an installed .NET 8 Desktop Runtime instead.
 
 ## Guest operating system images
 
